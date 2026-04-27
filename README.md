@@ -20,7 +20,7 @@ Built as part of a quant finance learning curriculum, with direct application to
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/options_dashboard.git
+git clone https://github.com/ifrancis2313/options_dashboard.git
 cd options_dashboard
 pip install -r requirements.txt
 ```
