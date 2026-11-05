@@ -81,28 +81,49 @@ def plot_vol_smile(S, T, r, strikes, market_prices):
     print("Saved: vol_smile.png")
 
 
-def pnl_heatmap(K, r, sigma, stock_prices=None, days=None):
+def pnl_heatmap(
+    K,
+    r,
+    sigma,
+    stock_prices=None,
+    days=None,
+    entry_spot=None,
+    entry_premium=None,
+    position="long",
+):
     """
-    Compute and display call option P&L heatmap across
-    stock prices and days to expiry.
+    Compute and display call option P&L across stock prices and days to expiry.
+
+    If `entry_premium` is omitted, it is calculated at `entry_spot` (default
+    `K`) with the longest expiry in `days`. Long positions earn value minus
+    premium; short positions earn premium minus value.
     """
     if stock_prices is None:
         stock_prices = [80, 85, 90, 95, 100, 105, 110, 115, 120]
     if days is None:
         days = [1, 30, 60, 90, 180, 365]
+    if position not in ("long", "short"):
+        raise ValueError("position must be 'long' or 'short'")
+
+    if entry_premium is None:
+        if entry_spot is None:
+            entry_spot = K
+        entry_premium = bs_call(entry_spot, K, max(days) / 365, r, sigma)
+    position_sign = 1 if position == "long" else -1
 
     rows = []
     for S in stock_prices:
         row = {}
         for d in days:
             T = d / 365
-            row[f"{d}d"] = round(bs_call(S, K, T, r, sigma), 2)
+            option_value = bs_call(S, K, T, r, sigma)
+            row[f"{d}d"] = round(position_sign * (option_value - entry_premium), 2)
         rows.append(row)
 
     df = pd.DataFrame(rows, index=stock_prices)
     df.index.name = "Stock"
 
-    print("\nCall Price Heatmap (rows=stock price, cols=days to expiry)\n")
+    print("\nCall P&L Heatmap (rows=stock price, cols=days to expiry)\n")
     print(df.to_string())
 
     # Plot heatmap
@@ -112,10 +133,10 @@ def pnl_heatmap(K, r, sigma, stock_prices=None, days=None):
     ax.set_xticklabels(df.columns)
     ax.set_yticks(range(len(df.index)))
     ax.set_yticklabels(df.index)
-    ax.set_title(f"Call Price Heatmap  (K={K}, σ={sigma})", fontsize=13)
+    ax.set_title(f"Call P&L Heatmap  (K={K}, σ={sigma}, position={position})", fontsize=13)
     ax.set_xlabel("Days to Expiry")
     ax.set_ylabel("Stock Price")
-    plt.colorbar(im, ax=ax, label="Call Price ($)")
+    plt.colorbar(im, ax=ax, label="Call P&L ($)")
 
     for i in range(len(df.index)):
         for j in range(len(df.columns)):

@@ -22,7 +22,8 @@ Built as part of a quant finance learning curriculum, with direct application to
 ```bash
 git clone https://github.com/ifrancis2313/options_dashboard.git
 cd options_dashboard
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
+pytest -q
 ```
 
 ---
@@ -80,8 +81,16 @@ options_dashboard/
 ├── strategies.py     # Straddle, spreads
 ├── analysis.py       # Visualizations
 ├── pricer.py         # CLI entry point
-└── requirements.txt
+├── requirements.txt  # Pinned runtime dependencies
+├── requirements-dev.txt
+└── tests/
 ```
+
+`pnl_heatmap()` shows call P&L net of the entry premium. By default, the
+entry premium is priced at the strike with the longest expiry in the heatmap;
+the CLI uses its `--S` value as the entry spot. Pass `entry_premium` to use
+the actual premium paid or received, and set `position="short"` for short-call
+P&L.
 
 ---
 
@@ -109,7 +118,7 @@ d2 = d1 - σ·√T
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.11+
 - numpy
 - scipy
 - pandas

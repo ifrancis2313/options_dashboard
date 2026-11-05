@@ -3,3 +3,8 @@
 __pycache__/
 *.pyc
 .venv/
+.pytest_cache/
+.ruff_cache/
+greeks_plot.png
+vol_smile.png
+pnl_heatmap.png

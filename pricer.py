@@ -64,7 +64,7 @@ def main():
 
     # --- Heatmap ---
     if args.heatmap:
-        pnl_heatmap(args.K, args.r, args.sigma)
+        pnl_heatmap(args.K, args.r, args.sigma, entry_spot=args.S)
 
     # --- Greeks plot ---
     if args.plot:
