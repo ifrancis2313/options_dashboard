@@ -1,4 +1,5 @@
 # Black-Scholes Options Analytics Dashboard
+[![CI](https://github.com/Ifrancis2313/options_dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/Ifrancis2313/options_dashboard/actions/workflows/ci.yml)
 
 A Python toolkit for pricing European options, computing Greeks, calculating implied volatility, and analyzing options strategies.
 
